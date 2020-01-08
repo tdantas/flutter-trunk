@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
                   Padding(
                     padding: EdgeInsets.only(top: 10, bottom: 10),
                     child: Container(
-                      height: 100,
+                      height: 300,
                       child: RaisedButton(
                         onPressed: () {
                           if (_formKey.currentState.validate()) {
@@ -115,7 +115,7 @@ class _HomeState extends State<Home> {
                           "Calcular",
                           style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
-                        color: Colors.green,
+                        color: Colors.blue,
                       ),
                     ),
                   ),
