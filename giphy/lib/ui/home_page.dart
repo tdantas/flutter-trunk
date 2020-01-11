@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:giphy/ui/giphy_page.dart';
 import 'package:share/share.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
             crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 1),
         itemCount: _getCount(asyncData.data["data"]),
         itemBuilder: (context, index) {
-          if (_q == null || index < asyncData.data["data"].length) {
+          if (_q == null || _q.isEmpty || index < asyncData.data["data"].length) {
             var image = asyncData.data["data"][index]["images"]["fixed_height"];
             String title = asyncData.data["data"][index]["title"];
             String url = image["url"];
@@ -61,48 +62,44 @@ class _HomePageState extends State<HomePage> {
                   Share.share(url);
                 },
                 onTap: () {
-
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => GiphyPage(title, url)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GiphyPage(title, url)));
                 },
-                child: Image.network(
-                  image["url"],
-                  fit: BoxFit.cover,
-                ));
+                child:
+                    FadeInImage.memoryNetwork(
+                        placeholder: kTransparentImage,
+                        fit: BoxFit.cover,
+                        height: 300,
+                        image: image["url"]));
           } else {
-            return
-              Container(
-                  color: Colors.green,
-                  child: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _offset += 19;
-                        });
-                      },
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.add, color: Colors.white, size: 80),
-                          Text("carregar mais",
-                            style: TextStyle(
-                                color: Colors.white, fontSize: 22),)
-                        ],
-                      ))
-              );
+            return Container(
+                color: Colors.green,
+                child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _offset += 19;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.add, color: Colors.white, size: 80),
+                        Text(
+                          "carregar mais",
+                          style: TextStyle(color: Colors.white, fontSize: 22),
+                        )
+                      ],
+                    )));
           }
         });
   }
 
   @override
   Widget build(BuildContext context) {
-    print("Size W is ${MediaQuery
-        .of(context)
-        .size
-        .width}");
-    print("Size H is ${MediaQuery
-        .of(context)
-        .size
-        .height}");
+    print("Size W is ${MediaQuery.of(context).size.width}");
+    print("Size H is ${MediaQuery.of(context).size.height}");
 
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center,
                         child: CircularProgressIndicator(
                           valueColor:
-                          AlwaysStoppedAnimation<Color>(Colors.white),
+                              AlwaysStoppedAnimation<Color>(Colors.white),
                           strokeWidth: 5,
                         ),
                       );
